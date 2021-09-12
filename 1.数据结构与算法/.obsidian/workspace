@@ -1,0 +1,100 @@
+{
+  "main": {
+    "id": "f2cab3773e81f4fc",
+    "type": "split",
+    "children": [
+      {
+        "id": "3c406b93be825d86",
+        "type": "leaf",
+        "active": true,
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "数据结构与算法(概念)/1.算法的基本概念.md",
+            "mode": "preview"
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "5d4cf60f8fde9931",
+    "type": "split",
+    "children": [
+      {
+        "id": "022f0f28b42d89ba",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e59ec2aa52b74912",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "3465db9d909609bc",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "c4b7fa1484e8209b",
+    "type": "split",
+    "children": [
+      {
+        "id": "cccb6737c4439a43",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "ba32ba1f23ad6714",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "数据结构与算法(概念)/1.算法的基本概念.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "lastOpenFiles": [
+    "数据结构与算法(概念)/1.算法的基本概念.md",
+    "数据结构与算法(java)/1.数组.md",
+    "数据结构与算法(java)/0.数据结构与算法目录.md",
+    "数据结构与算法(java)/3.链表.md",
+    "数据结构与算法(java)/3.队列.md",
+    "数据结构与算法(概念)/Untitled.md",
+    "1.数组.md",
+    "3.队列.md",
+    "3.链表.md",
+    "4.栈.md"
+  ]
+}

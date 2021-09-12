@@ -1,0 +1,91 @@
+{
+  "main": {
+    "id": "c2a332bbaabb0df8",
+    "type": "split",
+    "children": [
+      {
+        "id": "205025d155ae303b",
+        "type": "leaf",
+        "active": true,
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "1.概念、组成、功能、分类.md",
+            "mode": "preview"
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "cf3264d14986c2db",
+    "type": "split",
+    "children": [
+      {
+        "id": "7c29bfbfa63a008a",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "63ca6edf44bf353b",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "fc189b20db4c1d81",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "8a717b69d21af826",
+    "type": "split",
+    "children": [
+      {
+        "id": "fb2212efe04159d1",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1bfa277ee302053b",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "1.概念、组成、功能、分类.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "lastOpenFiles": [
+    "Untitled.md"
+  ]
+}
