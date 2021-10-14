@@ -4,7 +4,7 @@
 
 [下载地址](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html)
 
-![jdk1.8_8u291](https://i.loli.net/2021/07/15/2bzelo4vVIUB6cP.png)
+![jdk1.8_8u291](https://gitee.com/calvinqi/typoraPic/raw/main/typora/2bzelo4vVIUB6cP.png)
 
 ## 2.创建文件夹并解压
 
