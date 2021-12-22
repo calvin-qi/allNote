@@ -46,7 +46,10 @@
 
    ```shell
    swapoff -a # 临时关闭
-   sed -ri 's/.*swap.*/#&/' /etc/fstab  #永久关闭
+   # 注释 swap 行
+   vim /etc/fstab
+   reboot
+   free -h
    ```
 
 4. 修改主机名称
@@ -55,19 +58,28 @@
    hostnamectl set-hostname 名字
    ```
 
+5. 时间同步：
+
+   ```shell
+   yum -y install ntpdate
+   ntpdate time.windows.com
+   ```
+   
+   
+
 5. 添加主机名与IP对应关系（记得设置主机名）
 
    ```shell
    cat /etc/hosts
-   192.168.1.101 master
-   192.168.1.102 note1
-   192.168.1.103 note2
+   192.168.1.41 master
+   192.168.1.42 node1
+   192.168.1.43 node2
    ```
 
 6. 将桥接的IPv4流量传递到iptables的链
 
    ```shell
-    cat > /etc/sysctl.d/k8s.conf << EOF
+   cat > /etc/sysctl.d/k8s.conf << EOF
    net.bridge.bridge-nf-call-ip6tables = 1
    net.bridge.bridge-nf-call-iptables = 1
    EOF
@@ -87,7 +99,7 @@
    - 安装docker源
 
      ```shell
-     yum install -y wget && wget https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo -O /etc/yum.repos.d/docker-ce.repo
+     wget https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo -O /etc/yum.repos.d/docker-ce.repo
      ```
 
    - 安装docker
@@ -135,14 +147,22 @@
      ```shell
      systemctl enable kubelet
      ```
+     
+   - 镜像加速：
+   
+     ```shell
+     curl -sSL https://get.daocloud.io/daotools/set_mirror.sh | sh -s http://f1361db2.m.daocloud.io
+     ```
+   
+     
 
 # 5.部署Kubernetes Master(在master上执行)
 
 ```shell
 kubeadm init \
---apiserver-advertise-address=192.168.1.101 \
+--apiserver-advertise-address=192.168.1.41 \
 --image-repository registry.aliyuncs.com/google_containers \
---kubernetes-version v1.15.0 \
+--kubernetes-version v1.16.0 \
 --service-cidr=10.1.0.0/16 \
 --pod-network-cidr=10.244.0.0/16
 ```
@@ -232,7 +252,7 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be008450
   在node节点中执行生成的命令
 
   ```shell
-  kubeadm join 192.168.1.101:6443 --token a37omd.cxe58mh0cht2ukys     --discovery-token-ca-cert-hash sha256:b17118fbd1196c43c9bd8d7e88e1a1fdc7ae51f6ed1a5db40e4c9681b0fc1117
+  kubeadm join 192.168.1.41:6443 --token 122ckz.83vt2c2m8zhbcyto     --discovery-token-ca-cert-hash sha256:72b45c10028564db5e6da2cd04d97d6041260fc868e7c26dca1473c118f6fd74
   ```
 
   ![img](https://img-blog.csdnimg.cn/20200108142415759.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hlaWFuXzk5,size_16,color_FFFFFF,t_70)
@@ -276,7 +296,7 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be008450
 -   **查看nginx是否运行成功**
 
   ```shell
-  kubectl get pod.svc
+  kubectl get pod,svc
   ```
 
   ![img](https://img-blog.csdnimg.cn/20200108152607842.png)
@@ -291,18 +311,26 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be008450
 默认镜像国内无法访问，修改镜像地址为： lizhenliang/kubernetes-dashboard-amd64:v1.10.1
 默认Dashboard只能集群内部访问，修改Service为NodePort类型，暴露到外部：
 
-![img](https://img-blog.csdnimg.cn/20200108153956631.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hlaWFuXzk5,size_16,color_FFFFFF,t_70)
-
-- **先docker拉取镜像**
+- **先下载yaml文件**
 
   ```shell
-  docker pull  lizhenliang/kubernetes-dashboard-amd64:v1.10.1
+  wget https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml  
   ```
+
+  修改文件里面如图所示
+
+  ![img](https://img-blog.csdnimg.cn/20200108153956631.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hlaWFuXzk5,size_16,color_FFFFFF,t_70)
+
+  ```shell
+  vim recommended.yaml
+  ```
+
+  
 
 - **执行kubernetes-dashboard.yaml 文件**
 
   ```shell
-  kubectl apply -f kubernetes-dashboard.yaml 
+  kubectl apply -f recommended.yaml
   ```
 
 安装成功
@@ -312,7 +340,7 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be008450
 **查看暴露的端口**
 
 ```shell
-kubectl get pods,svc -n kube-system
+kubectl get pods -n kubernetes-dashboard -o wide
 ```
 
 ![img](https://img-blog.csdnimg.cn/20200108164453386.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hlaWFuXzk5,size_16,color_FFFFFF,t_70)
@@ -323,7 +351,7 @@ kubectl get pods,svc -n kube-system
 
 ![img](https://img-blog.csdnimg.cn/20200108164554291.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hlaWFuXzk5,size_16,color_FFFFFF,t_70)
 
-用这个命令生成节点加入的命令，token就在里面
+用这个命令生成节点加入的命令，token就在里面,这个token只能临时登录，在接下来的步骤生成永久的token
 
 ```shell
 kubeadm token create --print-join-command
