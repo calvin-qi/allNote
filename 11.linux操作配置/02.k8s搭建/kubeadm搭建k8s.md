@@ -1,4 +1,4 @@
-# 1.安装要求
+#  1.安装要求
 
 - 准备三台或以上机器centos7
 
@@ -132,7 +132,7 @@
 
    - 设置开机自启
 
-     ```shell
+     ```bash
      systemctl enable kubelet
      ```
 
