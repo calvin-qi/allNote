@@ -8,12 +8,12 @@ tar -zxvf hbase-2.0.0-bin.tar.gz
 mv hbase-2.0.0 /usr/local/hbase
 
 # 设置环境变量及临时目录
-echo "export HBASE_HOME=/usr/local/hbase\nexport PATH=$HBASE_HOME/bin:$PATH" >> /etc/profile
+echo -e 'export HBASE_HOME=/usr/local/hbase\nexport PATH=${HBASE_HOME}/bin:$PATH' >> /etc/profile
 source /etc/profile
 
 # 编辑hbase-env.s文件，指定系统运行环境
 cd /usr/local/hbase/conf
-echo "export JAVA_HOME=/usr/local/java/jdk1.8.0_191\nexport HBASE_CLASSPATH=/usr/local/hbase/conf\nexport HBASE_MANAGES_ZK=true\nexport HBASE_LOG_DIR=/var/log/hbase_log" >> hbase-env.sh
+echo -e 'export JAVA_HOME=/usr/local/java/jdk1.8.0_191\nexport HBASE_CLASSPATH=/usr/local/hbase/conf\nexport HBASE_MANAGES_ZK=true\nexport HBASE_LOG_DIR=/var/log/hbase_log' >> hbase-env.sh
 
 # 编辑hbase-site.xml核心配置文件
 cd /usr/local/hbase/conf

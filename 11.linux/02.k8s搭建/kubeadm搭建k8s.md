@@ -1,4 +1,4 @@
-#  1.安装要求
+# 1.安装要求
 
 - 准备三台或以上机器centos7
 
@@ -16,7 +16,7 @@
   192.168.1.103   node2
   ```
 
-![image-20211202171200989](C:\Users\calvi\AppData\Roaming\Typora\typora-user-images\image-20211202171200989.png)
+![image-20211202171200989](../../../../AppData/Roaming/Typora/typora-user-images/image-20211202171200989.png)
 
 # 2.学习目标
 
@@ -38,8 +38,8 @@
 2. 关闭selinux
 
    ```shell
-    sed -i 's/enforcing/disabled/' /etc/selinux/config 
-    setenforce 0
+   sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config 
+   setenforce 0
    ```
 
 3. 关闭swap
@@ -64,19 +64,19 @@
    yum -y install ntpdate
    ntpdate time.windows.com
    ```
-   
+
    
 
-5. 添加主机名与IP对应关系（记得设置主机名）
+6. 添加主机名与IP对应关系（记得设置主机名）
 
    ```shell
-   cat /etc/hosts
-   192.168.1.41 master
-   192.168.1.42 node1
-   192.168.1.43 node2
+   v /etc/hosts 
+   192.168.1.44 testmaster 
+   192.168.1.45 testnode1 
+   192.168.1.46 testnode2
    ```
 
-6. 将桥接的IPv4流量传递到iptables的链
+7. 将桥接的IPv4流量传递到iptables的链
 
    ```shell
    cat > /etc/sysctl.d/k8s.conf << EOF
@@ -85,7 +85,7 @@
    EOF
    ```
 
-7. 然后执行
+8. 然后执行
 
    ```shell
     sysctl --system
@@ -105,8 +105,47 @@
    - 安装docker
 
      ```shell
-     yum -y install docker-ce-18.06.1.ce-3.el7
+     yum -y install docker-ce-18.09.9-3.el7
      ```
+
+   - 设置cgroup驱动
+
+     ```shell
+     mkdir /etc/docker
+     cat > /etc/docker/daemon.json <<EOF
+     {
+       "exec-opts": ["native.cgroupdriver=systemd"],
+       "log-driver": "json-file",
+       "log-opts": {
+         "max-size": "100m"
+       },
+       "storage-driver": "overlay2"
+     }
+     EOF
+     ```
+
+   - 设置镜像加速
+
+     ```shell
+     mkdir /etc/docker
+     curl -sSL https://get.daocloud.io/daotools/set_mirror.sh | sh -s http://f1361db2.m.daocloud.io
+     
+     systemctl restart docker
+     
+     cat > /etc/docker/daemon.json <<EOF
+     {"registry-mirrors": ["http://f1361db2.m.daocloud.io"],
+       "exec-opts": ["native.cgroupdriver=systemd"],
+       "log-driver": "json-file",
+       "log-opts": {"max-size": "100m"
+       },
+       "storage-driver": "overlay2"
+     }
+     EOF
+     systemctl daemon-reload
+     systemctl restart docker
+     ```
+
+     
 
    - 设置开机自启和启动
 
@@ -144,16 +183,16 @@
 
    - 设置开机自启
 
-     ```bash
+     ```shell
      systemctl enable kubelet
      ```
-     
+
    - 镜像加速：
-   
+
      ```shell
      curl -sSL https://get.daocloud.io/daotools/set_mirror.sh | sh -s http://f1361db2.m.daocloud.io
      ```
-   
+
      
 
 # 5.部署Kubernetes Master(在master上执行)
@@ -162,9 +201,9 @@
 kubeadm init \
 --apiserver-advertise-address=192.168.1.41 \
 --image-repository registry.aliyuncs.com/google_containers \
---kubernetes-version v1.16.0 \
---service-cidr=10.1.0.0/16 \
---pod-network-cidr=10.244.0.0/16
+--kubernetes-version v1.15.0 \
+--service-cidr=10.1.0.0/18 \
+--pod-network-cidr=10.244.0.0/18
 ```
 
 ![img](https://img-blog.csdnimg.cn/2020010814064484.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hlaWFuXzk5,size_16,color_FFFFFF,t_70)
@@ -188,7 +227,7 @@ kubeadm init \
 # 6.安装Pod网络插件
 
 ```shell
-kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 ```
 
 > 确保能够访问到quay.io这个registery。
@@ -201,7 +240,7 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be008450
 > kubectl apply -f kube-flannel.yml
 > ```
 >
-> ![img](https://img-blog.csdnimg.cn/20200108141559390.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hlaWFuXzk5,size_16,color_FFFFFF,t_70)
+> ![img](https://gitee.com/calvinqi/typoraPic/raw/main/typora/20200108141559390.png)
 
 # 7.加入Kubernetes Node
 
@@ -255,7 +294,7 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be008450
   kubeadm join 192.168.1.41:6443 --token 122ckz.83vt2c2m8zhbcyto     --discovery-token-ca-cert-hash sha256:72b45c10028564db5e6da2cd04d97d6041260fc868e7c26dca1473c118f6fd74
   ```
 
-  ![img](https://img-blog.csdnimg.cn/20200108142415759.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hlaWFuXzk5,size_16,color_FFFFFF,t_70)
+  ![img](https://gitee.com/calvinqi/typoraPic/raw/main/typora/20200108142415759.png)
 
 - 查看Node
 
@@ -267,7 +306,7 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be008450
 
   添加一下node2，命令如上。切记，先执行在node上安装flannel
 
-  ![img](https://img-blog.csdnimg.cn/2020010815181254.png)
+  ![img](https://gitee.com/calvinqi/typoraPic/raw/main/typora/2020010815181254.png)
 
   已经完全准备完成
 
@@ -295,11 +334,11 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be008450
 
 -   **查看nginx是否运行成功**
 
-  ```shell
-  kubectl get pod,svc
-  ```
+    ```shell
+    kubectl get pod,svc
+    ```
 
-  ![img](https://img-blog.csdnimg.cn/20200108152607842.png)
+    ![img](https://img-blog.csdnimg.cn/20200108152607842.png)
 
 在浏览器访问。三个结点都可访问，说明集群已经搭建完成
 
@@ -335,7 +374,7 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be008450
 
 安装成功
 
-![img](https://img-blog.csdnimg.cn/2020010815404548.png)
+![img](https://gitee.com/calvinqi/typoraPic/raw/main/typora/2020010815404548.png)
 
 **查看暴露的端口**
 
@@ -343,7 +382,7 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be008450
 kubectl get pods -n kubernetes-dashboard -o wide
 ```
 
-![img](https://img-blog.csdnimg.cn/20200108164453386.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hlaWFuXzk5,size_16,color_FFFFFF,t_70)
+![img](https://gitee.com/calvinqi/typoraPic/raw/main/typora/20200108164453386.png)
 
 # 10.访问dashboard的web界面
 
@@ -360,20 +399,142 @@ kubeadm token create --print-join-command
 - 创建service account并绑定默认cluster-admin管理员集群角色：【依次执行】
 
   ```shell
-  kubectl create serviceaccount dashboard-admin -n kube-system
+  kubectl create serviceaccount dashboard-admin -n kubernetes-dashboard
   
-  kubectl create clusterrolebinding dashboard-admin --clusterrole=cluster-admin --serviceaccount=kube-system:dashboard-admin
+  kubectl create clusterrolebinding dashboard-admin --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:dashboard-admin
   
-  kubectl create clusterrolebinding dashboard-admin --clusterrole=cluster-admin --serviceaccount=kube-system:dashboard-admin
+  kubectl describe secrets -n kubernetes-dashboard $(kubectl -n kubernetes-dashboard get secret | awk '/dashboard-admin/{print $1}')
   ```
 
-  ![img](https://img-blog.csdnimg.cn/20200108164747779.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hlaWFuXzk5,size_16,color_FFFFFF,t_70)
+  ![img](https://gitee.com/calvinqi/typoraPic/raw/main/typora/20200108164747779.png)
+
+- 查看永久token
+
+  ```shell
+  kubectl get secret
+  kubectl describe secret def-ns-admin-token-8vzj5
+  ```
+
+  
 
 已经部署完成。
 
 ![img](https://img-blog.csdnimg.cn/20200108164833885.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hlaWFuXzk5,size_16,color_FFFFFF,t_70)
 
 
+
+
+
+# k8s存储
+
+安装nfs
+
+```sh
+yum -y install nfs-utils
+```
+
+主节点
+
+```sh
+vim /etc/exports
+添加 /data/kubernetes *(rw,no_root_squash)
+systemctl start nfs
+systemctl enable nfs
+创建文件夹 /data/kubernetes/
+```
+
+子节点
+
+```shell
+mkdir -p /data/kubernetes
+mount -t nfs 192.168.1.41:/data/kubernetes /data/kubernetes
+```
+
+
+
+```shell
+kubectl create -f rbac.yaml
+kubectl create -f class.yaml
+docker pull quay.io/external_storage/nfs-client-provisioner:latest
+
+修改deployment.yaml
+修改IP
+
+kubectl apply -f deployment.yaml
+```
+
+-------------------------------
+
+# ingress
+
+```shell
+kubectl apply -f ingress-controller.yaml
+```
+
+安装nginx
+
+```shell
+https://www.cnblogs.com/boonya/p/7907999.html
+./configure --prefix=/usr/local/nginx --with-http_ssl_module --with-http_stub_status_module --with-file-aio --with-stream
+```
+
+配置4层交换
+
+```shell
+stream {
+	server {
+		listen 80;
+		proxy_pass ingress_server80;
+	}
+	server {
+		listen 443;
+		proxy_pass ingress_server443;
+	}
+	upstream ingress_server80 {
+		server 192.168.1.44:80;
+	}
+	upstream ingress_server443 {
+		server 192.168.1.44:443;
+	}
+}
+```
+
+
+
+# metrics
+
+kubectl apply  -f .
+
+
+
+# promethus
+
+修改配置
+
+```shell
+vim prometheus-configmap.yaml
+
+kubectl apply  -f prometheus-configmap.yaml
+kubectl apply  -f prometheus-rbac.yaml
+kubectl apply  -f prometheus-rules.yaml
+kubectl apply  -f prometheus-service.yaml
+kubectl apply  -f prometheus-statefulset.yaml
+kubectl apply  -f node-exporter-ds.yml
+kubectl apply  -f grafana.yaml
+kubectl apply  -f kube-state-metrics-rbac.yaml
+kubectl apply  -f kube-state-metrics-deployment.yaml
+kubectl apply  -f kube-state-metrics-service.yaml
+```
+
+# elk
+
+```shell
+kubectl apply  -f elasticsearch.yaml
+kubectl apply  -f filebeat-kubernetes.yaml
+kubectl apply  -f kibana.yaml
+
+filebeat-7.3.2-*
+```
 
 
 
