@@ -438,14 +438,14 @@ vim /etc/exports
 添加 /data/kubernetes *(rw,no_root_squash)
 systemctl start nfs
 systemctl enable nfs
-mk /data/kubernetes/
+mkdir -p /data/kubernetes/
 ```
 
 子节点
 
 ```shell
 mkdir -p /data/kubernetes
-mount -t nfs 192.168.1.41:/data/kubernetes /data/kubernetes
+mount -t nfs 192.168.1.43:/data/kubernetes /data/kubernetes
 ```
 
 
@@ -455,7 +455,7 @@ kubectl create -f rbac.yaml
 kubectl create -f class.yaml
 docker pull quay.io/external_storage/nfs-client-provisioner:latest
 
-修改deployment.yaml
+vi deployment.yaml
 修改IP
 
 kubectl apply -f deployment.yaml
@@ -531,6 +531,12 @@ kubectl apply  -f filebeat-kubernetes.yaml
 kubectl apply  -f kibana.yaml
 
 filebeat-7.3.2-*
+```
+
+# terminal
+
+```shell
+kubectl apply -f k8-deploy.yaml
 ```
 
 
