@@ -1,7 +1,7 @@
 #!/bin/bash
-master=192.168.1.101
-node1=192.168.1.102
-node2=192.168.1.103
+master=192.168.1.40
+node1=192.168.1.41
+node2=192.168.1.42
 passwd=dosion123456
 hosts=`cat host |grep -Po "\d+\.\d+\.\d+\.\d+"`
 
