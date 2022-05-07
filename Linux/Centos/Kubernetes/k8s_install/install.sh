@@ -40,7 +40,7 @@ for ip in ${hosts}
 do
     {
     echo -e "IP-${ip} generating ssh-keygen ..."
-    sshpass -p ${passwd} ssh root@${ip} "ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''" >/dev/null 2>&1
+    sshpass -p ${passwd} ssh root@${ip} "ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N " >/dev/null 2>&1
     if [ $? != 0 ]; then
         echo "fail"
     else
