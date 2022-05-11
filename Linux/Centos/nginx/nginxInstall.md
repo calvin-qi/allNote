@@ -22,6 +22,6 @@ chmod 755 /etc/rc.local
 
 ```
 
-./nginx -s stop
-./nginx -s quit
-./nginx -s reload
+nginx -s stop
+nginx -s quit
+nginx -s reload
