@@ -11,25 +11,25 @@ server {
 
         location / {
             root   html/subscribe-h5;
-                  try_files $uri $uri/ /subscribe-h5/index.html;
+            try_files $uri $uri/ /subscribe-h5/index.html;
             index  index.html index.htm;
         }
 
         location /subscribe/ {
-                  proxy_pass http://127.0.0.1:8089;
+            proxy_pass http://127.0.0.1:8089;
         }
 
-              location /miniosubscribe/ {
-                  proxy_pass http://127.0.0.1:9000;
-              }
+        location /miniosubscribe/ {
+            proxy_pass http://127.0.0.1:9000;
+         }
 
         location /web {
             alias  html/subscribe-web;
-                  try_files $uri $uri/ /subscribe-web/index.html;
+            try_files $uri $uri/ /subscribe-web/index.html;
             index  index.html index.htm;
          }
         location @router {
-                   rewrite ^.*$ /index.html last;
+            rewrite ^.*$ /index.html last;
         }
         #
         error_page   500 502 503 504  /50x.html;
