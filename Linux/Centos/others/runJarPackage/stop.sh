@@ -1,5 +1,5 @@
 #!/bin/sh
-APP_NAME=account-main-1.0.0
+APP_NAME=campus-auth
 
 tpid=`ps -ef|grep $APP_NAME|grep -v grep|grep -v kill|awk '{print $2}'`
 if [ ${tpid} ]; then
@@ -14,4 +14,3 @@ if [ ${tpid} ]; then
 else
     echo $APP_NAME 'Stoped Success!'
 fi
-
