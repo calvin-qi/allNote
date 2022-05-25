@@ -1,7 +1,7 @@
 # docker安装minio
 
 ```shell
-docker run  -p 9000:9000 --name minio \
+docker run  -p 8081:9000 --name minio \
  -d --restart=always \
  -e MINIO_ACCESS_KEY=dosion \
  -e MINIO_SECRET_KEY=dosion123456 \
