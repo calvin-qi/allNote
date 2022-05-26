@@ -21,6 +21,16 @@ yum install -y  ntpdate
 ntpdate time.windows.com
 ```
 
+# yum换源
+
+```shell
+yum -y install wget
+mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
+yum clean all
+yum makecache
+```
 
 # 安装JDK1.8
 
@@ -44,8 +54,6 @@ source /etc/profile
 #测试 JDK是否安装成功
 java -version
 ```
-
-
 
 # 配置hosts,关闭防火墙和Selinux
 
@@ -122,4 +130,3 @@ do
     sshpass -p ${passwd} ssh root@${ip} "yum -y install sshpass expect wget curl ntpdate && systemctl stop firewalld && systemctl disable firewalld && sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config && swapoff -a && sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab && ntpdate time.windows.com"
 done
 ```
-

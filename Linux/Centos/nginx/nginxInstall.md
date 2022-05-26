@@ -1,4 +1,5 @@
 # 安装nginx
+
 ```shell
 cd /home
 yum install  -y gcc-c++
@@ -16,7 +17,7 @@ make install
 cd /usr/local/nginx/sbin/
 ./nginx 
 
-rm -rf /home/nginx-1.20.0.tar.gz
+rm -rf /home/nginx*
 echo '/usr/local/nginx/sbin/nginx'  >> /etc/rc.local
 chmod 755 /etc/rc.local
 
