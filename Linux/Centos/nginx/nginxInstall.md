@@ -21,6 +21,8 @@ rm -rf /home/nginx*
 echo '/usr/local/nginx/sbin/nginx'  >> /etc/rc.local
 chmod 755 /etc/rc.local
 
+
+
 ```
 
 nginx -s stop
