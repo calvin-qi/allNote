@@ -5,8 +5,9 @@ cd /home
 # 关闭swap,selinux
 swapoff  -a
 sed -ri 's/.*swap.*/#&/' /etc/fstab
-sed -i 's/enforcing/disabled/' /etc/selinux/config
 setenforce 0
+sed -i 's/enforcing/disabled/' /etc/selinux/config
+
 #将桥接的IPv4流量传递到iptables的链
 cat > /etc/sysctl.d/k8s.conf << EOF
 net.bridge.bridge-nf-call-ip6tables = 1
