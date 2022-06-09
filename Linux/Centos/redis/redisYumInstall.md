@@ -24,8 +24,7 @@ redis-cli -h 127.0.0.1 -p 6179
 # 打开redis配置文件
 vi /etc/redis.conf
 # 找到 bind 127.0.0.1 将其注释
-# 找到 protected-mode yes 将其改为
-protected-mode no
+# 找到 protected-mode yes 将其改为protected-mode no 修改daemonize yes为no
 
 service redis stop
 service redis start

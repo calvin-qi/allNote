@@ -14,7 +14,7 @@ make install
 mkdir /usr/local/redis
 cp redis.conf /usr/local/redis/
 vim /usr/local/redis/redis.conf
-#注释bind 127.0.0.1   修改daemonize yes为no
+#注释bind 127.0.0.1   修改daemonize yes为no 找到 protected-mode yes 将其改为protected-mode no
 
 #设置开机启动
 vim /etc/systemd/system/redis.service
