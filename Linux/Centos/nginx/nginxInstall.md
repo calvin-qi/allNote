@@ -1,6 +1,7 @@
 # 安装nginx
 
 ```shell
+#!/bin/sh
 cd /home
 yum install  -y gcc-c++
 yum install -y pcre pcre-devel
