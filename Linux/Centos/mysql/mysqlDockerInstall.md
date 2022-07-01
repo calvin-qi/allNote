@@ -11,6 +11,9 @@ docker run \
 -e MYSQL_ROOT_PASSWORD=123456 \
 -d mysql:8.0.22
 ```
+ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+chmod -R 644 /etc/my.cnf
+chmod -R 755 /home/qyx/data/mysql/data
 
 my.cnf:
 

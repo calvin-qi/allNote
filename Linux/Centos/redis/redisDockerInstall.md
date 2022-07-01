@@ -3,6 +3,7 @@ sudo docker run \
 -d \
 --name redis \
 -p 16379:6379 \
+--privileged=true \
 --restart unless-stopped \
 -v /home/qyx/data/redis/data:/data \
 -v /home/qyx/data/redis/conf/redis.conf:/etc/redis/redis.conf \
@@ -99,7 +100,7 @@ redis.conf:
 # you are sure you want clients from other hosts to connect to Redis
 # even if no authentication is configured, nor a specific set of interfaces
 # are explicitly listed using the "bind" directive.
-protected-mode yes
+protected-mode no
 
 # Accept connections on the specified port, default is 6379 (IANA #815344).
 # If port 0 is specified Redis will not listen on a TCP socket.
