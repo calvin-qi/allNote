@@ -5,6 +5,8 @@ systemctl stop sshd
 
 yum install -y pam* zlib*
 mv /etc/ssh /etc/ssh_bak
+# wget https://www.openssl.org/source/openssl-1.1.1g.tar.gz
+# wget https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-9.0p1.tar.gz
 tar -zxvf openssh-9.0p1.tar.gz
 tar -zxvf openssl-1.1.1g.tar.gz
 cd ./openssl-1.1.1g
