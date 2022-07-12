@@ -3,6 +3,7 @@ yum -y install xinetd telnet-server
 systemctl start telnet.socket
 systemctl stop sshd
 
+yum -y install gcc openssl-devel perl
 yum install -y pam* zlib*
 mv /etc/ssh /etc/ssh_bak
 # wget https://www.openssl.org/source/openssl-1.1.1g.tar.gz --no-check-certificate
