@@ -2,6 +2,7 @@
 
 1. 下载软件包
 官网下载：<https://dev.mysql.com/downloads/mysql/>
+`wget https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-8.0.30-1.el8.x86_64.rpm-bundle.tar`
 ![20220725165942](https://calvinqi.oss-cn-beijing.aliyuncs.com/images/allnote/20220725165942.png)
 快速下载地址：<http://calvinqi.oss-cn-beijing.aliyuncs.com/files/mysql/mysql-8.0.29-1.el7.x86_64.rpm-bundle_2.tar>
 2. 删除原有的mariadb
@@ -103,7 +104,9 @@
 2. 下载mysql5.7的包上传解压
 
    ```shell
-   #可以去官网下载，也可以用下面命令下载我存储的包，速度快点
+   #可以去官网下载
+   wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.39-1.el7.x86_64.rpm-bundle.tar
+   #也可以用下面命令下载我存储的包，速度快点
    wget http://calvinqi.oss-cn-beijing.aliyuncs.com/files/mysql/mysql-5.7.38-1.el7.x86_64.rpm-bundle.tar
    #解压
    tar -xf mysql-5.7.38-1.el7.x86_64.rpm-bundle.tar
