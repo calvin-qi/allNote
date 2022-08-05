@@ -28,7 +28,7 @@ spec:
               mountPath: /persistentvolumes
           env:
             - name: PROVISIONER_NAME
-              value: fuseim.pri/data
+              value: fuseim.pri/ifs
             - name: NFS_SERVER
               value: 192.168.1.40 
             - name: NFS_PATH
