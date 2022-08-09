@@ -3,10 +3,8 @@
 ```shell
 #!/bin/sh
 cd /home
-yum install  -y gcc-c++
-yum install -y pcre pcre-devel
-yum install -y zlib zlib-devel
-yum install -y openssl openssl-devel
+yum install  -y gcc-c++ pcre pcre-devel zlib zlib-devel openssl openssl-devel
+
 wget -c https://nginx.org/download/nginx-1.20.0.tar.gz
 
 tar -zxvf nginx-1.20.0.tar.gz
