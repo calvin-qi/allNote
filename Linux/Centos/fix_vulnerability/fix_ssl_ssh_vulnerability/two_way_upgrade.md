@@ -1,0 +1,253 @@
+# 方案一：本地挂载iso镜像使用yum源解决升级需要的依赖
+
+1.下载文件
+浏览器打开三个标签页分别输入下面三个链接后按回车，会弹出下载页面，保存文件
+<https://www.openssl.org/source/openssl-1.1.1g.tar.gz>
+
+<https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-9.0p1.tar.gz>
+
+<http://ftp.sjtu.edu.cn/centos/7.9.2009/isos/x86_64/CentOS-7-x86_64-DVD-2009.iso>
+
+2.上传文件解压，挂载iso镜像
+`CentOS-7-x86_64-DVD-2009.iso`文件到服务器的`/mnt`目录下，上传`openssl-1.1.1g.tar.gz`和`openssh-9.0p1.tar.gz`到`/root`目录下
+
+服务器执行命令
+
+```shell
+mkdir /media/CentOS7
+mount -t iso9660 /mnt/CentOS-7-x86_64-DVD-2009.iso /media/CentOS7
+cd /etc/yum.repos.d
+mkdir bak
+mv *.repo bak
+```
+
+编辑文件
+
+```shell
+vi /etc/yum.repos.d/CentOS7-Localsource.repo
+```
+
+此时进入了vi编辑器，按 i 键进入编辑模式，复制下面内容按`shift`+`insert`粘贴，按`esc`,再按`:wq`退出
+
+```shell
+[CentOS7-Localsource]
+name=CentOS7-Localsource
+baseurl=file:///media/CentOS7
+enabled=1
+gpgcheck=0
+```
+
+更新yum配置
+
+```shell
+yum clean all
+yum makecache
+```
+
+编辑/etc/fstab文件
+
+```shell
+vi /etc/fstab
+#按i进入编辑模式，添加下面内容到/etc/fstab末尾行，然后按esc,再按 :wq 退出
+/mnt/CentOS-7-x86_64-DVD-2009.iso /media/CentOS7 iso9660 defaults,loop 0 0
+```
+
+执行命令测试以上步骤是否成功
+
+```shell
+yum -y install git gcc+
+```
+
+输出以下信息说明成功，满足任意一张图片红框差不多的内容就可以，继续下一步
+![20220811132010](https://calvinqi.oss-cn-beijing.aliyuncs.com/images/allnote/20220811132010.png)
+![20220811132046](https://calvinqi.oss-cn-beijing.aliyuncs.com/images/allnote/20220811132046.png)
+
+3.解决Linux Polkit pkexec权限提升漏洞
+执行命令：`chmod 0755 /usr/bin/pkexec`
+4.解决openssh和openssl漏洞
+
+```shell
+#执行命令
+yum -y install xinetd telnet-server
+systemctl start telnet.socket
+useradd aaa
+echo 'aaa' | passwd --stdin aaa
+systemctl stop sshd
+#此时起到结束操作之前不要让ssh失去连接，保证一直可操作
+#查看rpm安装的ssh
+rpm -qa | grep openssh
+#卸载rpm安装的ssh
+rpm -e openssh --nodeps && rpm -e openssh-clients --nodeps && rpm -e openssh-server --nodeps
+#查看rpm安装的ssh是否卸载
+rpm -qa | grep openssh
+
+#安装依赖
+yum -y install gcc openssl-devel perl
+yum install -y pam* zlib*
+#备份ssh
+mv /etc/ssh /etc/ssh_bak
+
+#解压文件
+tar -zxvf openssh-9.0p1.tar.gz
+tar -zxvf openssl-1.1.1g.tar.gz
+
+#升级openssl
+cd ./openssl-1.1.1g
+./config --prefix=/usr/ --openssldir=/usr/ shared
+make && make install
+openssl version
+```
+
+执行完`openssl version`输出下图所示说明成功。进行下一步操作
+![20220811125301](https://calvinqi.oss-cn-beijing.aliyuncs.com/images/allnote/20220811125301.png)
+
+```shell
+#升级openssh
+cd ../openssh-9.0p1
+./configure --with-zlib --with-ssl-dir --with-pam --bindir=/usr/bin --sbindir=/usr/sbin --sysconfdir=/etc/ssh
+make && make install
+cp contrib/redhat/sshd.init /etc/init.d/sshd
+ssh -V
+sed -i '/#PermitRootLogin\ prohibit-password/a\PermitRootLogin\ yes' /etc/ssh/sshd_config
+sed -i.bak 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
+setenforce 0
+nohup service sshd restart
+systemctl status sshd
+```
+
+执行完`systemctl status sshd`显示如下红框信息说明成功，进行下一步
+![20220811125623](https://calvinqi.oss-cn-beijing.aliyuncs.com/images/allnote/20220811125623.png)
+
+```shell
+chkconfig --add sshd
+ssh -V
+```
+
+执行完`ssh -V`后显示如下信息说明成功。继续执行下一步
+![20220811125939](https://calvinqi.oss-cn-beijing.aliyuncs.com/images/allnote/20220811125939.png)
+
+```shell
+systemctl stop telnet.socket
+userdel -r aaa
+```
+
+到这就结束了，恭喜！
+
+# 方案二：上传安装依赖包的方式解决升级时的依赖
+
+```shell
+#依赖包下载地址.没ssh_ssl_upgrade_rpm.zip文件才进行下载
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/libmpc-devel-1.0.1-3.wget el7.x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/libmpc-1.0.1-3.el7.wget x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/snapper-libs-0.2.8-4.wget el7.x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/snapper-0.2.8-4.el7.wget x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/pcsc-lite-libs-1.8.8-8.wget el7.x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/boost-thread-1.53.0-28.wget el7.x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/boost-system-1.53.0-28.wget el7.x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/boost-serialization-1.wget 53.0-28.el7.x86_64.rpm
+wget http://mirror.centos.org/centos/7/wget updates/x86_64/Packages/zlib-static-1.wget 2.7-20.el7_9.x86_64.rpm
+wget http://mirror.centos.org/centos/7/wget updates/x86_64/Packages/wget pam_ssh_agent_auth-0.10.3-2.22.el7_9.wget x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/pam_snapper-0.2.8-4.wget el7.x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/pam_pkcs11-0.6.2-30.wget el7.x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/pam_krb5-2.4.8-6.el7.wget x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/pam-devel-1.1.8-23.el7.wget x86_64.rpm
+wget http://mirror.centos.org/centos/7/wget updates/x86_64/Packages/zlib-1.2.7-20.wget el7_9.x86_64.rpm
+wget http://mirror.centos.org/centos/7/wget updates/x86_64/Packages/openssl-libs-1.wget 0.2k-25.el7_9.x86_64.rpm
+wget http://mirror.centos.org/centos/7/wget updates/x86_64/Packages/openssl-1.0.wget 2k-25.el7_9.x86_64.rpm
+wget http://mirror.centos.org/centos/7/wget updates/x86_64/Packages/krb5-libs-1.15.wget 1-54.el7_9.x86_64.rpm
+wget http://mirror.centos.org/centos/7/wget updates/x86_64/Packages/glibc-common-2.wget 17-326.el7_9.x86_64.rpm
+wget http://mirror.centos.org/centos/7/wget updates/x86_64/Packages/glibc-2.17-326.wget el7_9.x86_64.rpm
+wget http://mirror.centos.org/centos/7/wget updates/x86_64/Packages/zlib-devel-1.2.wget 7-20.el7_9.x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/pcre-devel-8.32-17.el7.wget x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/mpfr-3.1.1-4.el7.wget x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/libverto-devel-0.2.5-4.wget el7.x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/libsepol-devel-2.5-10.wget el7.x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/libselinux-devel-2.wget 5-15.el7.x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/compat-libmpc-1.0.1-3.wget el7.x86_64.rpm
+wget http://mirror.centos.org/centos/7/wget updates/x86_64/Packages/libkadm5-1.15.wget 1-54.el7_9.x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/libcom_err-devel-1.42.wget 9-19.el7.x86_64.rpm
+wget http://mirror.centos.org/centos/7/wget updates/x86_64/Packages/krb5-devel-1.wget 15.1-54.el7_9.x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/keyutils-libs-devel-1.wget 5.8-3.el7.x86_64.rpm
+wget http://mirror.centos.org/centos/7/wget updates/x86_64/Packages/wget kernel-headers-3.10.0-1160.71.1.el7.wget x86_64.rpm
+wget http://mirror.centos.org/centos/7/wget updates/x86_64/Packages/wget glibc-headers-2.17-326.el7_9.x86_64.rpm
+wget http://mirror.centos.org/centos/7/wget updates/x86_64/Packages/glibc-devel-2.wget 17-326.el7_9.x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/cpp-4.8.5-44.el7.wget x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/openssl-devel-1.0.wget 2k-19.el7.x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/gcc-4.8.5-44.el7.wget x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/xinetd-2.3.15-14.el7.wget x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/wget x86_64/Packages/telnet-server-0.17-65.wget el7_8.x86_64.rpm
+```
+
+首先上传`ssh_ssl_upgrade_rpm.zip`,`openssl-1.1.1g.tar.gz`和`openssh-9.0p1.tar.gz`到`/root`目录下
+1.解决Linux Polkit pkexec权限提升漏洞
+执行命令：`chmod 0755 /usr/bin/pkexec`
+2.解决openssh和openssl漏洞
+
+```shell
+#执行命令
+unzip ssh_ssl_upgrade_rpm.zip
+cd ssh_ssl_upgrade_rpm
+#安装依赖
+rpm -ivh *.rpm --force --nodeps
+
+systemctl start telnet.socket
+useradd aaa
+echo 'aaa' | passwd --stdin aaa
+systemctl stop sshd
+#此时起到结束操作之前不要让ssh失去连接，保证一直可操作
+#查看rpm安装的ssh
+rpm -qa | grep openssh
+#卸载rpm安装的ssh
+rpm -e openssh --nodeps && rpm -e openssh-clients --nodeps && rpm -e openssh-server --nodeps
+#查看rpm安装的ssh是否卸载
+rpm -qa | grep openssh
+
+#备份ssh
+mv /etc/ssh /etc/ssh_bak
+
+#解压文件
+cd ~/
+tar -zxvf openssh-9.0p1.tar.gz
+tar -zxvf openssl-1.1.1g.tar.gz
+
+#升级openssl
+cd ./openssl-1.1.1g
+./config --prefix=/usr/ --openssldir=/usr/ shared
+make && make install
+openssl version
+```
+
+执行完`openssl version`输出下图所示说明成功。进行下一步操作
+![20220811125301](https://calvinqi.oss-cn-beijing.aliyuncs.com/images/allnote/20220811125301.png)
+
+```shell
+#升级openssh
+cd ../openssh-9.0p1
+./configure --with-zlib --with-ssl-dir --with-pam --bindir=/usr/bin --sbindir=/usr/sbin --sysconfdir=/etc/ssh
+make && make install
+cp contrib/redhat/sshd.init /etc/init.d/sshd
+ssh -V
+sed -i '/#PermitRootLogin\ prohibit-password/a\PermitRootLogin\ yes' /etc/ssh/sshd_config
+sed -i.bak 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
+setenforce 0
+nohup service sshd restart
+systemctl status sshd
+```
+
+执行完`systemctl status sshd`显示如下红框信息说明成功，进行下一步
+![20220811125623](https://calvinqi.oss-cn-beijing.aliyuncs.com/images/allnote/20220811125623.png)
+
+```shell
+chkconfig --add sshd
+ssh -V
+```
+
+执行完`ssh -V`后显示如下信息说明成功。继续执行下一步
+![20220811125939](https://calvinqi.oss-cn-beijing.aliyuncs.com/images/allnote/20220811125939.png)
+
+```shell
+systemctl stop telnet.socket
+userdel -r aaa
+```
+
+到这就结束了，恭喜！
