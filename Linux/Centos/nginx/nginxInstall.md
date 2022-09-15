@@ -5,10 +5,10 @@
 cd /home
 yum install  -y gcc-c++ pcre pcre-devel zlib zlib-devel openssl openssl-devel
 
-wget -c https://nginx.org/download/nginx-1.20.0.tar.gz
+wget -c https://nginx.org/download/nginx-1.22.0.tar.gz
 
-tar -zxvf nginx-1.20.0.tar.gz
-cd nginx-1.20.0
+tar -zxvf nginx-1.22.0.tar.gz
+cd nginx-1.22.0
 ./configure --prefix=/usr/local/nginx --with-http_ssl_module --with-http_stub_status_module --with-file-aio --with-stream
 
 make

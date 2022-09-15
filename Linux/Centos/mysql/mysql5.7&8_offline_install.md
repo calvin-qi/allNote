@@ -127,7 +127,7 @@
 
    ```shell
    systemctl start mysqld
-   systemctl ststus mysqld
+   systemctl status mysqld
 
    #查看临时密码
    cat /var/log/mysqld.log | grep password
