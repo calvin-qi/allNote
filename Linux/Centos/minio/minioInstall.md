@@ -9,3 +9,14 @@ docker run  -p 8081:9000 --name minio \
  -v /data/minio/config:/root/.minio \
   minio/minio server /data  --console-address ":9000" --address ":9090"
 ```
+
+```shell
+docker run  -p 8081:9000 -p 9090:9090\
+ --name minio \
+ -d --restart=always \
+ -e "MINIO_ROOT_USER=dosion" \
+ -e "MINIO_ROOT_PASSWORD=dosion123456" \
+ -v /data/minio/data:/data \
+ -v /data/minio/config:/root/.minio \
+  minio/minio server /data  --console-address ":9090" --address ":9000"
+```
