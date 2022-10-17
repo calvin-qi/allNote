@@ -176,3 +176,13 @@
    [mysqld]
    character-set-server=utf8
    ```
+
+# 忽略表大小写和导入数据库的配置
+
+```shell
+#在/etc/my.cnf里的[mysqld]下面添加
+lower_case_table_names= 1
+
+skip-name-resolve
+sql_mode=STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+```
