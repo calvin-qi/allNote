@@ -186,3 +186,21 @@ lower_case_table_names= 1
 skip-name-resolve
 sql_mode=STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
 ```
+# 完全卸载mysql
+
+```shell
+#1、查看mysql安装了哪些东西
+rpm -qa |grep -i mysql
+#2、开始卸载，对安装的XXX依次执行：
+yum remove XXX
+#3、查看是否卸载完成
+rpm -qa |grep -i mysql
+#4、找mysql相关目录
+find / -name mysql
+#5、对安装的所有XXX目录进行删除操作
+rm -rf XXX
+#6、删除/etc/my.cnf
+rm -rf /etc/my.cnf
+#7、删除/var/log/mysqld.log（如果不删除这个文件，会导致新安装的mysql无法生存新密码，会出现无法登陆的情况）
+rm -rf /var/log/mysqld.log
+```
