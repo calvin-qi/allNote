@@ -134,4 +134,12 @@ server {
         }
     }
     
+
+    location /oabggl {
+        alias   /usr/share/nginx/oabggl;
+        index  index.html index.htm;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Real-Port $remote_port;
+        proxy_set_header X-Forwarded-$proxy_add_x_forwarded_for;
+    }
 ```
