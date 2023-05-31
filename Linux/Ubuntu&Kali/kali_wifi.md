@@ -1,3 +1,4 @@
+```sh
 sudo apt-get update -y
 sudo apt install linux-headers-`uname -r`
 reboot
@@ -20,3 +21,4 @@ sudo apt-get install firmware-b43-installer
 sudo apt-get update && sudo apt-get install firmware-ralink
 sudo apt-get install firmware-iwlwifi
 reboot
+```
