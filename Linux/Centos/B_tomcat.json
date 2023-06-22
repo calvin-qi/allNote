@@ -1,0 +1,47 @@
+[
+    {
+        "PROBE_NODE_PORT": 31106,
+        "APP_NAME": "hihis-hicp-app",
+        "HTTP_NODE_PORT": 30106
+    },
+    {
+        "PROBE_NODE_PORT": 31107,
+        "APP_NAME": "hihis-preip-app",
+        "HTTP_NODE_PORT": 30107
+    },
+    {
+        "PROBE_NODE_PORT": 31115,
+        "APP_NAME": "hihis-opappt-app",
+        "HTTP_NODE_PORT": 30115
+    },
+    {
+        "PROBE_NODE_PORT": 31116,
+        "APP_NAME": "hihis-opdoc-app",
+        "HTTP_NODE_PORT": 30116
+    },
+    {
+        "PROBE_NODE_PORT": 31134,
+        "APP_NAME": "hihis-mq-app",
+        "HTTP_NODE_PORT": 30134
+    },
+    {
+        "PROBE_NODE_PORT": 31136,
+        "APP_NAME": "hihis-ws-app",
+        "HTTP_NODE_PORT": 30136
+    },
+    {
+        "PROBE_NODE_PORT": 31109,
+        "APP_NAME": "hihis-hiex-app",
+        "HTTP_NODE_PORT": 30109
+    },
+    {
+        "PROBE_NODE_PORT": 31139,
+        "APP_NAME": "hihis-opmgt-app",
+        "HTTP_NODE_PORT": 30139
+    },
+    {
+        "PROBE_NODE_PORT": 31140,
+        "APP_NAME": "hihis-surg-app",
+        "HTTP_NODE_PORT": 30140
+    }
+]

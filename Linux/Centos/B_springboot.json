@@ -1,0 +1,54 @@
+[
+    [
+        {
+            "PROBE_NODE_PORT": 31101,
+            "APP_NAME": "hihis-gateway-app",
+            "HTTP_NODE_PORT": 30101
+        },
+        {
+            "PROBE_NODE_PORT": 31102,
+            "APP_NAME": "hihis-core-app",
+            "HTTP_NODE_PORT": 30102
+        },
+        {
+            "PROBE_NODE_PORT": 31103,
+            "APP_NAME": "hihis-ipnur-app",
+            "HTTP_NODE_PORT": 30103
+        },
+        {
+            "PROBE_NODE_PORT": 31104,
+            "APP_NAME": "hihis-ipdoc-se",
+            "HTTP_NODE_PORT": 30104
+        },
+        {
+            "PROBE_NODE_PORT": 31105,
+            "APP_NAME": "hihis-ipdoc-app",
+            "HTTP_NODE_PORT": 30105
+        },
+        {
+            "PROBE_NODE_PORT": 31118,
+            "APP_NAME": "hihis-ipmgt-app",
+            "HTTP_NODE_PORT": 30118
+        },
+        {
+            "PROBE_NODE_PORT": 31111,
+            "APP_NAME": "hihis-opdoc-se",
+            "HTTP_NODE_PORT": 30111
+        },
+        {
+            "PROBE_NODE_PORT": 31142,
+            "APP_NAME": "domain-app",
+            "HTTP_NODE_PORT": 30142
+        },
+        {
+            "PROBE_NODE_PORT": 31026,
+            "APP_NAME": "domain-bd-app",
+            "HTTP_NODE_PORT": 30026
+        },
+        {
+            "PROBE_NODE_PORT": 31141,
+            "APP_NAME": "hihis-iphrppd-app",
+            "HTTP_NODE_PORT": 30141
+        }
+    ]
+]
