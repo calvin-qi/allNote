@@ -143,3 +143,7 @@ server {
         proxy_set_header X-Forwarded-$proxy_add_x_forwarded_for;
     }
 ```
+
+```nginx
+hash $remote_addr consistent;
+```
