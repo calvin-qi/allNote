@@ -351,4 +351,19 @@ CONNECT BY PRIOR sid = blocker_sid
        AND PRIOR sess_serial# = blocker_sess_serial#
        AND PRIOR INSTANCE = blocker_instance
  START WITH blocker_is_valid = 'FALSE'
+
+#删除DBLINK
+drop public database link LINK_HIS; #删除公有的
+drop database link LINK_HIS; #删除私有的
+#查询DBLINK
+select * from dba_db_links;
+#更新dblink
+update sys.link$ set host='(DESCRIPTION =
+(ADDRESS_LIST =
+(ADDRESS = (PROTOCOL = TCP)(HOST = 172.168.20.222)(PORT =1521 ))
+)
+(CONNECT_DATA =
+(SERVICE_NAME = hisdb)
+)
+)' where name='HIHIS' 
 ```
