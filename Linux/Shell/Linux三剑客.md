@@ -47,19 +47,6 @@ firewall-cmd --panic-off
 firewall-cmd --query-panic
 ```
 
-# 查看端口进程命令
-```shell
-#查看某个端口占用情况，例如查看3306端口被哪个进程所占用
-netstat -tunlp | grep 3306
-netstat -anp | grep ":22"
-netstat -aultp  //查看哪些端口被占用
-lsof -iTCP:22 -sTCP:LISTEN
-#根据进程名查看相应进程信息,根据进程 id 查看进程的详细信息
-ps -ef | grep php
-ps -aux | grep php
-
-```
-
 # linux三剑客sed,awk,grep
 
 ## sed
@@ -177,7 +164,7 @@ echo sksksksksksk | sed 's/sk/SK/2g'
 #skSKSKSKSKSK
 ```
 
-以上命令中字符 `/ `在`sed`中作为定界符使用，也可以使用任意的定界符：比如`echo sksksksksksk | sed 's:sk:SK:4g'`
+以上命令中字符 `/`在`sed`中作为定界符使用，也可以使用任意的定界符：比如`echo sksksksksksk | sed 's:sk:SK:4g'`
 
 ------------------
 
@@ -415,28 +402,3 @@ sed -n 'n;p' test.txt
 sed -n '1~2p' test.txt
 sed -n '2~2p' test.txt
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
