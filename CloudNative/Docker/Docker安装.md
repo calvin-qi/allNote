@@ -1,4 +1,6 @@
-# 离线安装docker&docker-compose
+# Docker安装
+
+## 离线安装docker&docker-compose
 
 1. 下载docker安装包`docker-20.10.20.tgz`和docker-compose包`docker-compose-linux-x86_64`。或者去[docker官网下载](https://download.docker.com/linux/static/stable/x86_64/)
 
@@ -82,7 +84,7 @@
    WantedBy=multi-user.target
    ```
 
-# 安装docker和docker-compose
+## 在线方式安装docker和docker-compose
 
 ```sh
 echo "=====开始安装docker，docker-compose====="

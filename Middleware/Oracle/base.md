@@ -1,6 +1,6 @@
 修改有多实例数据库的用户密码
 
-```sql
+```bash
 #修改文件权限组
 chown oracle:oinstall 
 #修改用户密码
@@ -62,7 +62,7 @@ grant connect,dba to BSEMR;
 alter tablespace BSEMR_DATA add datafile '+DATADG' size 1g autoextend on;
 ```
 
-```
+```sql
 ALTER USER bsadmin IDENTIFIED BY bsadminfy2023;
 ALTER USER bsportal IDENTIFIED BY bsportalfy2023;
 ALTER USER bsqylis IDENTIFIED BY bsqylisfy2023;
@@ -129,7 +129,7 @@ alter user isync ACCOUNT UNLOCK;
 alter user carddbtest ACCOUNT UNLOCK;
 ```
 
-```sql
+```bash
 
 登录10数据库
 su - oracle
