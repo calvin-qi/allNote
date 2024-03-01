@@ -91,3 +91,37 @@ impdp system/oracle@orcl dumpfile=expdp.dmp DIRECTORY=expdp schemas=BBP,HIHIS lo
 select username,sid,serial from v$session where USERNAME='HIS';
 alter system kill session'317,63481';
 ```
+
+## 查看表空间使用情况
+
+```sql
+select f.tablespace_name tablespace_name,
+       round((d.maxbytes / 1024 / 1024 / 1024), 2) total_g,
+       round((d.maxbytes - d.sumbytes + f.sumbytes) / 1024 / 1024 / 1024, 2) free_g,
+       round((d.sumbytes - f.sumbytes) / 1024 / 1024 / 1024, 2) used_g,
+       round((d.sumbytes - f.sumbytes) * 100 / d.maxbytes, 2) used_percent
+  from (select tablespace_name, sum(bytes) sumbytes
+          from dba_free_space
+         group by tablespace_name) f,
+       (select tablespace_name,
+               sum(bytes) sumbytes,
+               sum(case
+                 when autoextensible = 'YES' then
+                  maxbytes
+                 else
+                  bytes
+               end) as maxbytes
+          from dba_data_files
+         group by tablespace_name, autoextensible) d
+ where f.tablespace_name = d.tablespace_name
+ order by used_percent desc;
+```
+
+## 查询某个时间节点前的数据
+
+```sql
+#先查询，后插入到新表中
+select * from hi_enr_record_detail as of timestamp to_timestamp('2024-01-24 17:50:00','yyyy-mm-dd hh24:mi:ss');
+
+insert into HI_ENR_RECORD_DETAIL_BAK20240124 select * from hi_enr_record_detail as of timestamp to_timestamp('2024-01-24 17:50:00','yyyy-mm-dd hh24:mi:ss');
+```
