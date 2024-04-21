@@ -125,3 +125,48 @@ select * from hi_enr_record_detail as of timestamp to_timestamp('2024-01-24 17:5
 
 insert into HI_ENR_RECORD_DETAIL_BAK20240124 select * from hi_enr_record_detail as of timestamp to_timestamp('2024-01-24 17:50:00','yyyy-mm-dd hh24:mi:ss');
 ```
+
+## 数据库备份脚本
+
+```sh
+su - oracle<<EOU
+export ORACLE_SID=whis1
+rman target / msglog /backup/rman`date +%Y%m%d%H`.log append <<EOF
+CONFIGURE RETENTION POLICY TO REDUNDANCY 3;
+run
+{
+        ALLOCATE CHANNEL CH1 DEVICE TYPE DISK;
+        ALLOCATE CHANNEL CH2 DEVICE TYPE DISK;
+        backup database format '/backup/DB_%d_%U_%T.bak';
+        RELEASE CHANNEL CH1;
+        RELEASE CHANNEL CH2;
+}
+
+run
+{
+        ALLOCATE CHANNEL CH1 DEVICE TYPE DISK;
+         backup archivelog all delete all input format '/backup/ARCH_%d_%U_%T.bak';
+        RELEASE CHANNEL CH1;
+}
+
+run
+{
+        ALLOCATE CHANNEL CH1 DEVICE TYPE DISK;
+        backup current controlfile format '/backup/CTL_%d_%U_%T.bak';
+        RELEASE CHANNEL CH1;
+}
+delete force noprompt archivelog  until time 'sysdate-1';
+delete  noprompt obsolete;
+crosscheck archivelog all;
+delete noprompt expired archivelog all;
+crosscheck backup;
+delete noprompt expired backup;
+EOF
+EOU
+```
+
+> 定时任务删除指定保留几天之外的备份
+>
+> ```sh
+> 00 03 * * * find /backup -xdev -mtime +1 -name "+.bak" -exec rm -f {} \;
+> ```
