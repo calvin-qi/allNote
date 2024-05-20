@@ -46,7 +46,7 @@
     ```
 
 2. 用两种方式访问grafana
-   第一种：用ingress方式访问
+   - 第一种：用ingress方式访问
    创建一个gafana_ingress.yaml
 
    ```yaml
@@ -67,4 +67,33 @@
                name: grafana
                port:
                  number: 3000
+   ```
+
+   - 第二种：NodePort方式访问
+  新建一个service或者在原有service上修改
+
+   ```yaml
+   apiVersion: v1
+   kind: Service
+   metadata:
+     name: grafana-web
+     namespace: monitoring
+   spec:
+     externalTrafficPolicy: Cluster
+     internalTrafficPolicy: Cluster
+     ipFamilies:
+       - IPv4
+     ipFamilyPolicy: SingleStack
+     ports:
+       - name: http
+         nodePort: 31030
+         port: 80
+         protocol: TCP
+         targetPort: 3000
+     selector:
+       app.kubernetes.io/component: grafana
+       app.kubernetes.io/name: grafana
+       app.kubernetes.io/part-of: kube-prometheus
+     sessionAffinity: None
+     type: NodePort
    ```

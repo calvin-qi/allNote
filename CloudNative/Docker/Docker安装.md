@@ -94,7 +94,7 @@ ntpdate time.windows.com
 wget https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo -O /etc/yum.repos.d/docker-ce.repo
 
 #安装docker
-yum -y install docker-ce-18.09.9-3.el7
+yum -y install docker-ce-18.09.9-3.el7 
 echo "=====设置cgroup====="
 #设置cgroup驱动，添加镜像加速
 mkdir /etc/docker
