@@ -228,41 +228,85 @@ Ansible 提供了丰富的命令行工具，涵盖了从单任务执行到复杂
     在 Playbook 中使用 vars 和 vars_prompt 来动态设置 ansible_user 和 ansible_ssh_pass,在执行的时候只交互输入一次用户密码
 
     ```yml
-    ---
-    - name: Setup SSH key for passwordless login
-      hosts: target_servers
-      become: yes
-      vars_prompt:
-        - name: "ansible_user"
-          prompt: "Enter the username for the target server"
-          private: no
-        - name: "ansible_ssh_pass"
-          prompt: "Enter the password for the target server"
-          private: yes
-      tasks:
-        - name: Ensure the .ssh directory exists
-          file:
-            path: /root/{{ ansible_user }}/.ssh
-            state: directory
-            mode: 0700
-            owner: "{{ ansible_user }}"
-            group: "{{ ansible_user }}"
-
-        - name: Copy SSH public key to target servers
-          authorized_key:
-            user: "{{ ansible_user }}"
-            state: present
-            key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
-
-        - name: Ensure sudoers file is updated to allow passwordless sudo
-          lineinfile:
-            path: /etc/sudoers
-            state: present
-            regexp: '^%{{ ansible_user }} ALL=\(ALL:ALL\) NOPASSWD: ALL'
-            line: '%{{ ansible_user }} ALL=(ALL:ALL) NOPASSWD: ALL'
-          become: yes
-          become_user: root
-
+  ---
+  - name: Ensure user is in sudoers file
+    hosts: k8s-by-all
+    gather_facts: no
+    vars_prompt:
+      - name: "target_user"
+        prompt: "Enter the username for the target server"
+        private: no
+      - name: "root_password"
+        prompt: "Enter the root password for the target server"
+        private: yes
+  
+    tasks:
+      - name: Check if target user is root
+        set_fact:
+          is_root_user: "{{ target_user == 'root' }}"
+  
+      - name: Check if target user is in sudoers
+        command: "grep -E '^{{ target_user }} ALL=\\(ALL:ALL\\) NOPASSWD: ALL' /etc/  sudoers"
+        register: sudoers_check
+        ignore_errors: yes
+        become: yes
+        become_user: root
+        when: not is_root_user
+  
+      - name: Add target user to sudoers if not present and not root
+        lineinfile:
+          path: /etc/sudoers
+          state: present
+          regexp: '^{{ target_user }} ALL=\\(ALL:ALL\\) NOPASSWD: ALL'
+          line: '{{ target_user }} ALL=(ALL:ALL) NOPASSWD: ALL'
+          validate: 'visudo -cf %s'
+        when: not is_root_user and sudoers_check.rc != 0
+        become: yes
+        become_user: root
+        vars:
+          ansible_become_pass: "{{ root_password }}"
+  
+      - name: Ensure the .ssh directory exists
+        file:
+          path: "/home/{{ target_user }}/.ssh"
+          state: directory
+          mode: '0700'
+          owner: "{{ target_user }}"
+          group: "{{ target_user }}"
+        become: yes
+        become_user: "{{ target_user }}"
+        when: not is_root_user
+  
+      - name: Ensure the .ssh directory exists for root
+        file:
+          path: "/root/.ssh"
+          state: directory
+          mode: '0700'
+          owner: root
+          group: root
+        become: yes
+        become_user: root
+        when: is_root_user
+  
+      - name: Copy SSH public key to target servers
+        authorized_key:
+          user: "{{ target_user }}"
+          state: present
+          key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
+        become: yes
+        become_user: "{{ target_user }}"
+        when: not is_root_user
+  
+      - name: Copy SSH public key to root
+        authorized_key:
+          user: root
+          state: present
+          key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
+        become: yes
+        become_user: root
+        when: is_root_user
+  
+  
     ```
 
 - 向 [k8s] 主机组新增 rancher 用户并设置密码为 123123
