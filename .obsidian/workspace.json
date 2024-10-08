@@ -4,15 +4,19 @@
     "type": "split",
     "children": [
       {
-        "id": "ae1d7dc1ed470523",
+        "id": "f77ff7baf1ce901c",
         "type": "tabs",
         "children": [
           {
-            "id": "a0c48a0c83fe0297",
+            "id": "140bb07c5aea3acc",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "Linux/RedHat_Series/配置网络代理.md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
         ]
@@ -28,16 +32,6 @@
         "id": "31a9a1c490b8bdea",
         "type": "tabs",
         "children": [
-          {
-            "id": "e7f44698b94b239e",
-            "type": "leaf",
-            "state": {
-              "type": "file-explorer",
-              "state": {
-                "sortOrder": "alphabetical"
-              }
-            }
-          },
           {
             "id": "f6c6e9c4d3518351",
             "type": "leaf",
@@ -68,8 +62,19 @@
               "type": "bookmarks",
               "state": {}
             }
+          },
+          {
+            "id": "f033f7649fe9de90",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
@@ -89,6 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "Linux/RedHat_Series/配置网络代理.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -105,6 +111,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "Linux/RedHat_Series/配置网络代理.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -126,7 +133,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "Linux/RedHat_Series/配置网络代理.md"
+              }
             }
           },
           {
@@ -147,6 +156,7 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "remotely-save:Remotely Save": false,
       "switcher:打开快速切换": false,
       "graph:查看关系图谱": false,
       "canvas:新建白板": false,
@@ -156,8 +166,33 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "a0c48a0c83fe0297",
+  "active": "140bb07c5aea3acc",
   "lastOpenFiles": [
+    "Program/Golang/从零到一学Golang.md",
+    "Linux/RedHat_Series/配置网络代理.md",
+    "Linux/others/250个拿来即用shell脚本.pdf",
+    "Linux/others/npmError.md",
+    "Linux/others/commonInstallationScripts.md",
+    "Linux/others/运维宝典.pdf",
+    "CloudNative/Docker/Docker安装.md",
+    "Linux/RedHat_Series/搭建DNS服务器.md",
+    "Linux/RedHat_Series/磁盘扩容并格式化.md",
+    "Middleware/ActiveMQ/安装activeMQ.md",
+    "Middleware/MinIO/安装minIO.md",
+    "Middleware/RabbitMQ/rabbitmq安装.md",
+    "Middleware/Zookeeper/安装zookeeper.md",
+    "Middleware/RocketMQ/安装rocketmq.md",
+    "Middleware/Oracle/oracle常用操作.md",
+    "Program/Java/JavaFundamental/04.NullPointException.md",
+    "Program/Java/JavaFundamental/03.ObjectOriented.md",
+    "未命名.canvas",
+    "Program/Java/JavaFundamental/06.Encapsulation.md",
+    "Program/Java/JavaFundamental/images/变量什么时候声明为静态的2.png",
+    "Program/Java/JavaFundamental/images/引用和方法内存分析.png",
+    "README.md",
+    "Program/Java/JavaFundamental/00.Contents.md",
+    "_debug_remotely_save/sync_plans_hist_exported_on_1725347066147.md",
+    "_debug_remotely_save",
     "未命名.md",
     "SqlBasis/3.SqlFunction/1.functions.md",
     "2023-06-16.md",
@@ -166,18 +201,6 @@
     "Linux/Centos/oracle/base.md",
     "Linux/Centos/others/00.SystemCommonCommands.md",
     "Linux/Centos/mysql/Untitled.canvas",
-    "Untitled.canvas",
-    "Linux/Centos/mysql/mysqlDockerInstall.md",
-    "Linux/Centos/mysql/mysqlBackup.md",
-    "Linux/Centos/mysql/mysql5.7&8_offline_install.md",
-    "Linux/Centos/others/commonInstallationScripts.md",
-    "Linux/Centos/hadoop/installHadoopHbasePhoenix.md",
-    "Linux/Centos/Kubernetes/kubeadmInstallkubernetes.md",
-    "Linux/Centos/Kubernetes/k8sCommandsAndTemplate.md",
-    "Linux/Centos/docker/dockerInstall.md",
-    "Linux/Centos/nginx/nginx&keepalived/loadBalance.md",
-    "Linux/Centos/minio/minioInstall.md",
-    "Linux/Centos/mongodb/install.md",
-    "2022-10-17.md"
+    "Untitled.canvas"
   ]
 }

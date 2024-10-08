@@ -1,5 +1,6 @@
 {
-  "accentColor": "",
-  "cssTheme": "Atom",
-  "textFontFamily": "DejaVu Sans Mono"
+  "accentColor": "#15f98f",
+  "cssTheme": "GitHub Theme",
+  "textFontFamily": "DejaVu Sans Mono",
+  "theme": "system"
 }

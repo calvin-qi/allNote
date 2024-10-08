@@ -126,6 +126,19 @@ select * from hi_enr_record_detail as of timestamp to_timestamp('2024-01-24 17:5
 insert into HI_ENR_RECORD_DETAIL_BAK20240124 select * from hi_enr_record_detail as of timestamp to_timestamp('2024-01-24 17:50:00','yyyy-mm-dd hh24:mi:ss');
 ```
 
+## 查询锁表
+
+```sql
+---查询锁表
+select l.session_id,o.owner,o.object_name
+from v$locked_object l,dba_objects o
+where l.object_id=o.object_id;
+--查询出锁表 -sid,serial#
+select s.username ,s.sid,s.serial# , s.logon_time from v$locked_object l,v$session s where l.session_id=s.sid order by s.logon_time;
+--杀进程  sid,serial#
+alter system kill session '438,61038'
+```
+
 ## 数据库备份脚本
 
 ```sh

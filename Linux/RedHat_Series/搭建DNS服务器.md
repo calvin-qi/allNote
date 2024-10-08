@@ -108,7 +108,7 @@
 7. 启动并设置BIND服务：
    - 启动BIND服务：
 
-     ```
+   ```
      sudo systemctl start named
      ```
 

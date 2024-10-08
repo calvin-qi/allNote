@@ -1,4 +1,8 @@
 {
   "showUnsupportedFiles": true,
-  "alwaysUpdateLinks": true
+  "alwaysUpdateLinks": true,
+  "promptDelete": false,
+  "newFileLocation": "current",
+  "attachmentFolderPath": "./",
+  "showLineNumber": true
 }
