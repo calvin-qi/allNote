@@ -1,18 +1,18 @@
-# Mysql7&8安装
+# Mysql7&8 安装
 
 ## 离线安装
 
-### 安装mysql8
+### 安装 mysql8
 
 1. 下载软件包
-官网下载：<https://dev.mysql.com/downloads/mysql/>
-`wget https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-8.0.30-1.el8.x86_64.rpm-bundle.tar`
-![20220725165942](https://calvinqi.oss-cn-beijing.aliyuncs.com/images/allnote/20220725165942.png)
-快速下载地址：<http://calvinqi.oss-cn-beijing.aliyuncs.com/files/mysql/mysql-8.0.29-1.el7.x86_64.rpm-bundle_2.tar>
-2. 删除原有的mariadb
-`rpm -qa|grep mariadb`
-删除命令(删除所有包含mariadb的包)
-`rpm -e --nodeps mariadb-libs
+   官网下载：<https://dev.mysql.com/downloads/mysql/>
+   `wget https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-8.0.30-1.el8.x86_64.rpm-bundle.tar`
+   ![20220725165942](https://calvinqi.oss-cn-beijing.aliyuncs.com/images/allnote/20220725165942.png)
+   快速下载地址：<http://calvinqi.oss-cn-beijing.aliyuncs.com/files/mysql/mysql-8.0.29-1.el7.x86_64.rpm-bundle_2.tar>
+2. 删除原有的 mariadb
+   `rpm -qa|grep mariadb`
+   删除命令(删除所有包含 mariadb 的包)
+   `rpm -e --nodeps mariadb-libs
 `
 3. 上传解压安装
 
@@ -78,11 +78,11 @@
    #其中username为自定义的用户名；host为登录域名，host为'%'时表示为 任意IP，为localhost时表示本机，或者填写指定的IP地址；paasword为密码
 
    # 为用户授权
-   grant all privileges on *.* to 'username'@'%' with grant option; 
+   grant all privileges on *.* to 'username'@'%' with grant option;
    #其中*.*第一个*表示所有数据库，第二个*表示所有数据表，如果不想授权全部那就把对应的*写成相应数据库或者数据表；username为指定的用户；%为该用户登录的域名
 
    #授权之后刷新权限
-   flush privileges; 
+   flush privileges;
    ```
 
 7. 修改`/etc/my.cnf`,添加下面内容
@@ -96,16 +96,16 @@
    character-set-server=utf8
    ```
 
-### 安装mysql5.7
+### 安装 mysql5.7
 
-1. 删除自带的mariadb
+1. 删除自带的 mariadb
 
    ```shell
    rpm -qa|grep mariadb
    rpm -e --nodeps mariadb-libs
    ```
 
-2. 下载mysql5.7的包上传解压
+2. 下载 mysql5.7 的包上传解压
 
    ```shell
    #可以去官网下载
@@ -127,7 +127,7 @@
    #如果缺什么依赖包就去https://centos.pkgs.org/7/centos-x86_64/下载.有网的就yum -y install xxx安装
    ```
 
-3. 启动mysql登录
+3. 启动 mysql 登录
 
    ```shell
    systemctl start mysqld
@@ -191,7 +191,7 @@ skip-name-resolve
 sql_mode=STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
 ```
 
-### 完全卸载mysql
+### 完全卸载 mysql
 
 ```shell
 #1、查看mysql安装了哪些东西
@@ -212,7 +212,7 @@ rm -rf /var/log/mysqld.log
 
 ---
 
-## docker方式安装
+## docker 方式安装
 
 ```shell
 docker run \
@@ -220,9 +220,9 @@ docker run \
 --name mysql \
 --privileged=true \
 --restart unless-stopped \
--v /home/qyx/data/mysql/my.cnf:/etc/mysql/my.cnf:rw \
--v /home/qyx/data/mysql/logs:/var/log/mysql \
--v /home/qyx/data/mysql/data:/var/lib/mysql \
+-v ./my.cnf:/etc/mysql/my.cnf:rw \
+-v ./logs:/var/log/mysql \
+-v ./data:/var/lib/mysql \
 -v /etc/localtime:/etc/localtime \
 -e MYSQL_ROOT_PASSWORD=123456 \
 -d mysql:8.0.22
@@ -255,8 +255,9 @@ default-character-set=utf8mb4
 
 ```
 
-## mysql主从方式安装
-mysql互为主从
+## mysql 主从方式安装
+
+mysql 互为主从
 
 1
 my.cnf add conf
@@ -285,15 +286,15 @@ auto-increment-offset = 2
 restart mysql
 
 1
-将1设为2的主服务器,在1上创建授权账户，允许在2上连接
+将 1 设为 2 的主服务器,在 1 上创建授权账户，允许在 2 上连接
 mysql -uroot -p
-grant replication slave on *.* to root@'%' identified by 'qyx54321';
+grant replication slave on _._ to root@'%' identified by 'qyx54321';
 
-查看主服务1的当前binlog状态信息
+查看主服务 1 的当前 binlog 状态信息
 show master status;
 
 2
-在2上将1设为自己的主服务器并开启slave功能
+在 2 上将 1 设为自己的主服务器并开启 slave 功能
 
 change master to
 master_host='192.168.18.31',
@@ -305,18 +306,18 @@ master_log_pos=442;
 start slave;
 
 show slave status\G
-其中slave_io_running与slave_sql_running必须为yes
+其中 slave_io_running 与 slave_sql_running 必须为 yes
 
-将2设为1的主服务器,在2上创建授权账户，允许在1上连接
+将 2 设为 1 的主服务器,在 2 上创建授权账户，允许在 1 上连接
 mysql -uroot -p
-grant replication slave on *.* to root@'%' identified by 'qyx54321';
+grant replication slave on _._ to root@'%' identified by 'qyx54321';
 Flush privileges;
 
-查看主服务2当前binlog状态信息
+查看主服务 2 当前 binlog 状态信息
 语法：show master status;
 
 1
-在主服务1上将主服务2设为自己的主服务器并开启slave功能
+在主服务 1 上将主服务 2 设为自己的主服务器并开启 slave 功能
 change master to
 master_host='192.168.18.32',
 master_user='root',
@@ -327,4 +328,4 @@ master_log_pos=442;
 start slave;
 查看状态
 语法：show slave status\G
-其中slave_io_running与slave_sql_running必须为yes
+其中 slave_io_running 与 slave_sql_running 必须为 yes
